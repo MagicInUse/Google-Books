@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap';
 import { useQuery, useMutation } from '@apollo/client';
-import { GET_ME } from '../graphql/queries';
-import { DELETE_BOOK } from '../graphql/mutations';
-import { removeBookId } from '../utils/localStorage';
-import type { User } from '../models/User';
+import { GET_ME } from '../graphql/queries.js';
+import { DELETE_BOOK } from '../graphql/mutations.js';
+import Auth from '../utils/auth.js';
+import { removeBookId } from '../utils/localStorage.js';
+import type { User } from '../models/User.js';
 
 const SavedBooks = () => {
   const { loading, data } = useQuery(GET_ME);
@@ -24,9 +25,20 @@ const SavedBooks = () => {
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId: string) => {
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
+
+    if (!token) {
+      return false;
+    }
+
     try {
       const { data } = await deleteBook({
         variables: { bookId },
+        context: {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        },
       });
 
       setUserData(data.deleteBook);

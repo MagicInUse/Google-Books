@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { ApolloServer } from 'apollo-server-express';
 import typeDefs from './schemas/typeDefs.js';
 import resolvers from './schemas/resolvers.js';
@@ -8,6 +9,10 @@ import { authMiddleware } from './services/auth.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// Get __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const server = new ApolloServer({
   typeDefs,
@@ -23,7 +28,7 @@ app.use(express.json());
 
 // if we're in production, serve client/build as static assets
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
+  app.use(express.static(path.join(__dirname, '../client/dist')));
 }
 
 db.once('open', () => {

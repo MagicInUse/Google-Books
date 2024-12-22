@@ -9,11 +9,11 @@ import {
   Row
 } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
-import Auth from '../utils/auth';
-import { SAVE_BOOK } from '../graphql/mutations';
-import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
-import type { Book } from '../models/Book';
-import type { GoogleAPIBook } from '../models/GoogleAPIBook';
+import Auth from '../utils/auth.js';
+import { SAVE_BOOK } from '../graphql/mutations.js';
+import { saveBookIds, getSavedBookIds } from '../utils/localStorage.js';
+import type { Book } from '../models/Book.js';
+import type { GoogleAPIBook } from '../models/GoogleAPIBook.js';
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -70,7 +70,6 @@ const SearchBooks = () => {
 
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
-
     if (!token) {
       return false;
     }
@@ -78,6 +77,11 @@ const SearchBooks = () => {
     try {
       const { data } = await saveBook({
         variables: { bookData: bookToSave },
+        context: {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        },
       });
 
       // if book successfully saves to user's account, save book id to state

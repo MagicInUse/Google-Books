@@ -2,9 +2,9 @@ import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
-import { CREATE_USER } from '../graphql/mutations';
-import Auth from '../utils/auth';
-import type { User } from '../models/User';
+import { CREATE_USER } from '../graphql/mutations.js';
+import Auth from '../utils/auth.js';
+import type { User } from '../models/User.js';
 
 const SignupForm = ({ handleModalClose }: { handleModalClose: () => void }) => {
   const [userFormData, setUserFormData] = useState<User>({ username: '', email: '', password: '', savedBooks: [] });
