@@ -1,6 +1,7 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { GET_ME, LOGIN_USER, CREATE_USER, SAVE_BOOK, DELETE_BOOK } from '../graphql/queries';
+import { GET_ME } from '../graphql/queries';
+import { LOGIN_USER, CREATE_USER, SAVE_BOOK, DELETE_BOOK } from '../graphql/mutations';
 import AuthService from './auth';
 
 const httpLink = createHttpLink({

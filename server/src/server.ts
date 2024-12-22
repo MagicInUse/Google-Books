@@ -27,5 +27,6 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 db.once('open', () => {
+  console.log(`MongoDB connected to: ${db.host}`);
   app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
 });
