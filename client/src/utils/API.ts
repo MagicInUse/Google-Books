@@ -1,27 +1,7 @@
-import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
-import { GET_ME } from '../graphql/queries';
-import { LOGIN_USER, CREATE_USER, SAVE_BOOK, DELETE_BOOK } from '../graphql/mutations';
-import AuthService from './auth';
-
-const httpLink = createHttpLink({
-  uri: '/graphql',
-});
-
-const authLink = setContext((_, { headers }) => {
-  const token = AuthService.getToken();
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : '',
-    },
-  };
-});
-
-const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
-});
+import { GET_ME } from '../graphql/queries.js';
+import { LOGIN_USER, CREATE_USER, SAVE_BOOK, DELETE_BOOK } from '../graphql/mutations.js';
+import AuthService from './auth.js';
+import client from './ApolloClient.js'; // Import the Apollo Client
 
 export const getMe = async () => {
   return client.query({ query: GET_ME });

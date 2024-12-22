@@ -3,9 +3,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ApolloServer } from 'apollo-server-express';
 import typeDefs from './schemas/typeDefs.js';
-import resolvers from './schemas/resolvers.js';
+import { resolvers } from './schemas/resolvers.js';
 import db from './config/connection.js';
-import { authMiddleware } from './services/auth.js';
+import { authMiddleware } from './context.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -17,7 +17,7 @@ const __dirname = path.dirname(__filename);
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => authMiddleware({ req }),
+  context: authMiddleware,
 });
 
 await server.start();

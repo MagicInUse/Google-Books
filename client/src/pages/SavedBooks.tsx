@@ -9,7 +9,13 @@ import type { User } from '../models/User.js';
 
 const SavedBooks = () => {
   const { loading, data } = useQuery(GET_ME);
-  const [deleteBook] = useMutation(DELETE_BOOK);
+  const [deleteBook] = useMutation(DELETE_BOOK, {
+      context: {
+        headers: {
+          authorization: Auth.getToken() ? `Bearer ${Auth.getToken()}` : '',
+        },
+      },
+    });
   const [userData, setUserData] = useState<User>({
     username: '',
     email: '',

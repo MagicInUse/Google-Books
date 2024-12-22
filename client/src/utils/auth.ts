@@ -1,13 +1,15 @@
 import { jwtDecode } from 'jwt-decode';
 
 interface UserToken {
-  name: string;
+  _id: string;
+  username: string;
+  email: string;
   exp: number;
 }
 
 class AuthService {
   getProfile() {
-    return jwtDecode(this.getToken() || '');
+    return jwtDecode<UserToken>(this.getToken() || '');
   }
 
   loggedIn() {

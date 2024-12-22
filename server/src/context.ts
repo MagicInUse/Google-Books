@@ -1,4 +1,4 @@
-import type { Request } from 'express';
+import { Request } from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -13,7 +13,7 @@ export interface Context {
   user?: UserPayload;
 }
 
-const secret = process.env.JWT_SECRET_KEY || '';
+const secret = process.env.JWT_SECRET || '';
 
 export const authMiddleware = ({ req }: { req: Request }): Context => {
   const token = req.headers.authorization || '';
@@ -28,11 +28,4 @@ export const authMiddleware = ({ req }: { req: Request }): Context => {
   }
 
   return {};
-};
-
-const expiration = '1h';
-
-export const signToken = (user: UserPayload) => {
-  const payload = { _id: user._id, email: user.email, username: user.username };
-  return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
 };

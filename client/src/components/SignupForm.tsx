@@ -4,10 +4,15 @@ import { Form, Button, Alert } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
 import { CREATE_USER } from '../graphql/mutations.js';
 import Auth from '../utils/auth.js';
-import type { User } from '../models/User.js';
+
+interface UserFormData {
+  username: string;
+  email: string;
+  password: string;
+}
 
 const SignupForm = ({ handleModalClose }: { handleModalClose: () => void }) => {
-  const [userFormData, setUserFormData] = useState<User>({ username: '', email: '', password: '', savedBooks: [] });
+  const [userFormData, setUserFormData] = useState<UserFormData>({ username: '', email: '', password: '' });
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
@@ -43,7 +48,6 @@ const SignupForm = ({ handleModalClose }: { handleModalClose: () => void }) => {
       username: '',
       email: '',
       password: '',
-      savedBooks: [],
     });
   };
 
