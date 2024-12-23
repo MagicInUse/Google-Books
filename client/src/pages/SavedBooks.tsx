@@ -5,12 +5,21 @@ import { DELETE_BOOK } from '../graphql/mutations';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import type { User } from '../models/User';
+import { Book } from '../models/Book';
+
+interface UserData {
+  _id: string;
+  username: string;
+  email: string;
+  savedBooks: Book[];
+}
 
 const SavedBooks = () => {
-  const { loading, error, data } = useQuery(GET_ME);
+  const { loading, error, data } = useQuery(GET_ME, {
+    skip: !Auth.loggedIn(),
+  });
   const [deleteBook] = useMutation(DELETE_BOOK);
-  const [userData, setUserData] = useState<User>();
+  const [userData, setUserData] = useState<UserData>();
 
   useEffect(() => {
     if (data) {
@@ -43,30 +52,30 @@ const SavedBooks = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-
-  if (!userData) {
+  if (!Auth.loggedIn()) {
     return <p>No user data available. Please log in.</p>;
   }
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <>
       <div className='text-light bg-dark p-5'>
         <Container>
-          <h1>Viewing {userData.username}'s saved books!</h1>
+          <h1>Viewing {userData?.username}'s saved books!</h1>
         </Container>
       </div>
       <Container>
         <h2 className='pt-5'>
-          {userData.savedBooks.length
+          {userData?.savedBooks.length
             ? `Viewing ${userData.savedBooks.length} saved ${
                 userData.savedBooks.length === 1 ? 'book' : 'books'
               }:`
             : 'You have no saved books!'}
         </h2>
         <Row>
-          {userData.savedBooks.map((book) => {
+          {userData?.savedBooks.map((book) => {
             return (
               <Col md='4' key={book.bookId}>
                 <Card border='dark'>

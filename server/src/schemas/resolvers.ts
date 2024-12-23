@@ -36,7 +36,8 @@ const resolvers = {
   Query: {
     me: async (_parent: any, _args: any, context: Context) => {
       if (context.user) {
-        return User.findById(context.user._id);
+        const userData = await User.findOne({ _id: context.user._id }).select('-__v -password');
+        return userData;
       }
       throw new AuthenticationError('You need to be logged in!');
     },
