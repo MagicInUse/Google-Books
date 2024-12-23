@@ -1,37 +1,26 @@
 import { useState, useEffect } from 'react';
-import { Container, Card, Button, Row, Col } from 'react-bootstrap';
 import { useQuery, useMutation } from '@apollo/client';
-import { GET_ME } from '../graphql/queries.js';
-import { DELETE_BOOK } from '../graphql/mutations.js';
-import AuthService from '../utils/auth.js';
-import { removeBookId } from '../utils/localStorage.js';
-import type { User } from '../models/User.js';
+import { GET_ME } from '../graphql/queries';
+import { DELETE_BOOK } from '../graphql/mutations';
+import Auth from '../utils/auth';
+import { removeBookId } from '../utils/localStorage';
+import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import type { User } from '../models/User';
 
 const SavedBooks = () => {
-  const { loading, data } = useQuery(GET_ME);
-  const [deleteBook] = useMutation(DELETE_BOOK, {
-      context: {
-        headers: {
-          authorization: AuthService.getToken() ? `Bearer ${AuthService.getToken()}` : '',
-        },
-      },
-    });
-  const [userData, setUserData] = useState<User>({
-    username: '',
-    email: '',
-    password: '',
-    savedBooks: [],
-  });
+  const { loading, error, data } = useQuery(GET_ME);
+  const [deleteBook] = useMutation(DELETE_BOOK);
+  const [userData, setUserData] = useState<User | null>(null);
 
   useEffect(() => {
     if (data) {
+      console.log('Fetched data:', data);
       setUserData(data.me);
     }
   }, [data]);
 
-  // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId: string) => {
-    const token = AuthService.loggedIn() ? AuthService.getToken() : null;
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
       return false;
@@ -48,27 +37,24 @@ const SavedBooks = () => {
       });
 
       setUserData(data.deleteBook);
-      // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {
       console.error(err);
     }
   };
 
-  // if data isn't here yet, say so
-  if (loading) {
-    return <h2>LOADING...</h2>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  if (!userData) {
+    return <p>No user data available. Please log in.</p>;
   }
 
   return (
     <>
       <div className='text-light bg-dark p-5'>
         <Container>
-          {userData.username ? (
-            <h1>Viewing {userData.username}'s saved books!</h1>
-          ) : (
-            <h1>Viewing saved books!</h1>
-          )}
+          <h1>Viewing {userData.username}'s saved books!</h1>
         </Container>
       </div>
       <Container>

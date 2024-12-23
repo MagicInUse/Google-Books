@@ -9,11 +9,11 @@ import {
   Row
 } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
-import AuthService from '../utils/auth.js';
-import { SAVE_BOOK } from '../graphql/mutations.js';
-import { saveBookIds, getSavedBookIds } from '../utils/localStorage.js';
-import type { Book } from '../models/Book.js';
-import type { GoogleAPIBook } from '../models/GoogleAPIBook.js';
+import Auth from '../utils/auth';
+import { SAVE_BOOK } from '../graphql/mutations';
+import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
+import type { Book } from '../models/Book';
+import type { GoogleAPIBook } from '../models/GoogleAPIBook';
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -26,7 +26,7 @@ const SearchBooks = () => {
   const [saveBook] = useMutation(SAVE_BOOK, {
     context: {
       headers: {
-        authorization: AuthService.getToken() ? `Bearer ${AuthService.getToken()}` : '',
+        authorization: Auth.getToken() ? `Bearer ${Auth.getToken()}` : '',
       },
     },
   });
@@ -75,7 +75,7 @@ const SearchBooks = () => {
     const bookToSave: Book = searchedBooks.find((book) => book.bookId === bookId)!;
 
     // get token
-    const token = AuthService.loggedIn() ? AuthService.getToken() : null;
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
     if (!token) {
       return false;
     }
@@ -138,7 +138,7 @@ const SearchBooks = () => {
                     <Card.Title>{book.title}</Card.Title>
                     <p className='small'>Authors: {book.authors}</p>
                     <Card.Text>{book.description}</Card.Text>
-                    {AuthService.loggedIn() && (
+                    {Auth.loggedIn() && (
                       <Button
                         disabled={savedBookIds?.some((savedBookId: string) => savedBookId === book.bookId)}
                         className='btn-block btn-info'
