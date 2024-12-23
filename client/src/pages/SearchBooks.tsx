@@ -9,7 +9,7 @@ import {
   Row
 } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
-import Auth from '../utils/auth.js';
+import AuthService from '../utils/auth.js';
 import { SAVE_BOOK } from '../graphql/mutations.js';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage.js';
 import type { Book } from '../models/Book.js';
@@ -26,7 +26,7 @@ const SearchBooks = () => {
   const [saveBook] = useMutation(SAVE_BOOK, {
     context: {
       headers: {
-        authorization: Auth.getToken() ? `Bearer ${Auth.getToken()}` : '',
+        authorization: AuthService.getToken() ? `Bearer ${AuthService.getToken()}` : '',
       },
     },
   });
@@ -75,7 +75,7 @@ const SearchBooks = () => {
     const bookToSave: Book = searchedBooks.find((book) => book.bookId === bookId)!;
 
     // get token
-    const token = Auth.loggedIn() ? Auth.getToken() : null;
+    const token = AuthService.loggedIn() ? AuthService.getToken() : null;
     if (!token) {
       return false;
     }
@@ -138,7 +138,7 @@ const SearchBooks = () => {
                     <Card.Title>{book.title}</Card.Title>
                     <p className='small'>Authors: {book.authors}</p>
                     <Card.Text>{book.description}</Card.Text>
-                    {Auth.loggedIn() && (
+                    {AuthService.loggedIn() && (
                       <Button
                         disabled={savedBookIds?.some((savedBookId: string) => savedBookId === book.bookId)}
                         className='btn-block btn-info'

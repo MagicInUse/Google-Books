@@ -3,7 +3,7 @@ import { Container, Card, Button, Row, Col } from 'react-bootstrap';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_ME } from '../graphql/queries.js';
 import { DELETE_BOOK } from '../graphql/mutations.js';
-import Auth from '../utils/auth.js';
+import AuthService from '../utils/auth.js';
 import { removeBookId } from '../utils/localStorage.js';
 import type { User } from '../models/User.js';
 
@@ -12,7 +12,7 @@ const SavedBooks = () => {
   const [deleteBook] = useMutation(DELETE_BOOK, {
       context: {
         headers: {
-          authorization: Auth.getToken() ? `Bearer ${Auth.getToken()}` : '',
+          authorization: AuthService.getToken() ? `Bearer ${AuthService.getToken()}` : '',
         },
       },
     });
@@ -31,7 +31,7 @@ const SavedBooks = () => {
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId: string) => {
-    const token = Auth.loggedIn() ? Auth.getToken() : null;
+    const token = AuthService.loggedIn() ? AuthService.getToken() : null;
 
     if (!token) {
       return false;

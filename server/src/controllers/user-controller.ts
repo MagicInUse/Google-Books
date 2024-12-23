@@ -3,7 +3,7 @@ import type { Request, Response } from 'express';
 import User from '../models/User.js';
 // import sign token function from auth
 import { signToken } from '../services/auth.js';
-import { UserPayload } from '../context.js';
+import { UserPayload } from '../services/auth.js';
 
 // get a single user by either their id or their username
 export const getSingleUser = async (req: Request, res: Response) => {

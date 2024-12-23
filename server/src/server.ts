@@ -5,7 +5,7 @@ import { ApolloServer } from 'apollo-server-express';
 import typeDefs from './schemas/typeDefs.js';
 import { resolvers } from './schemas/resolvers.js';
 import db from './config/connection.js';
-import { authMiddleware } from './context.js';
+import { authMiddleware } from './services/auth.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;

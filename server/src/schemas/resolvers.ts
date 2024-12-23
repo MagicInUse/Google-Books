@@ -1,6 +1,6 @@
 import { AuthenticationError } from 'apollo-server-express';
 import User from '../models/User.js';
-import { Context } from '../context.js';
+import { Context } from '../services/auth.js';
 import { signToken } from '../services/auth.js';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request } from 'express';
