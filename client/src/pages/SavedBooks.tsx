@@ -10,7 +10,7 @@ import type { User } from '../models/User';
 const SavedBooks = () => {
   const { loading, error, data } = useQuery(GET_ME);
   const [deleteBook] = useMutation(DELETE_BOOK);
-  const [userData, setUserData] = useState<User | null>(null);
+  const [userData, setUserData] = useState<User>();
 
   useEffect(() => {
     if (data) {

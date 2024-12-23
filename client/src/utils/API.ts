@@ -1,7 +1,7 @@
 import { GET_ME } from '../graphql/queries';
 import { LOGIN_USER, ADD_USER, SAVE_BOOK, DELETE_BOOK } from '../graphql/mutations';
+import { client } from './client';
 import Auth from './auth';
-import client from './ApolloClient'; // Import the Apollo Client
 
 export const getMe = async () => {
   return client.query({ query: GET_ME });
