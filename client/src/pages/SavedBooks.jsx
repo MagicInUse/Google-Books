@@ -2,7 +2,6 @@ import { useQuery, useMutation } from '@apollo/client';
 import { GET_ME } from '../utils/queries';
 import { REMOVE_BOOK } from '../utils/mutations';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap';
-import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
   const { loading, data } = useQuery(GET_ME);
@@ -12,9 +11,9 @@ const SavedBooks = () => {
   const handleDeleteBook = async (bookId) => {
     try {
       await removeBook({
-        variables: { bookId }
+        variables: { bookId },
+        refetchQueries: [{ query: GET_ME }]
       });
-      removeBookId(bookId);
     } catch (err) {
       console.error(err);
     }
@@ -26,11 +25,10 @@ const SavedBooks = () => {
 
   return (
     <>
-      <div className="text-light bg-dark p-5">
-        <Container fluid>
-          <h1>Viewing {userData.username}'s saved books!</h1>
-        </Container>
-      </div>
+      <Container fluid className="text-light bg-dark p-5">
+        <h1>Viewing {userData.username}'s saved books!</h1>
+      </Container>
+      
       <Container>
         <h2 className='pt-5'>
           {userData.savedBooks?.length
