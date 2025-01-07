@@ -1,28 +1,22 @@
 import { useState } from 'react';
-import type { ChangeEvent, FormEvent } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
-import { LOGIN_USER } from '../graphql/mutations.js';
-import Auth from '../utils/auth.js';
+import { LOGIN_USER } from '../utils/mutations';
+import Auth from '../utils/auth';
 
-interface UserFormData {
-  username: string;
-  password: string;
-}
-
-const LoginForm = ({ handleModalClose }: { handleModalClose: () => void }) => {
-  const [userFormData, setUserFormData] = useState<UserFormData>({ username: '', password: '' });
+const LoginForm = () => {
+  const [userFormData, setUserFormData] = useState({ email: '', password: '' });
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
   const [loginUser] = useMutation(LOGIN_USER);
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (event) => {
     const { name, value } = event.target;
     setUserFormData({ ...userFormData, [name]: value });
   };
 
-  const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
 
     const form = event.currentTarget;
@@ -33,18 +27,17 @@ const LoginForm = ({ handleModalClose }: { handleModalClose: () => void }) => {
 
     try {
       const { data } = await loginUser({
-        variables: { username: userFormData.username, password: userFormData.password },
+        variables: { ...userFormData }
       });
 
       Auth.login(data.login.token);
-      handleModalClose();
     } catch (err) {
       console.error(err);
       setShowAlert(true);
     }
 
     setUserFormData({
-      username: '',
+      email: '',
       password: '',
     });
   };
@@ -56,16 +49,16 @@ const LoginForm = ({ handleModalClose }: { handleModalClose: () => void }) => {
           Something went wrong with your login credentials!
         </Alert>
         <Form.Group className='mb-3'>
-          <Form.Label htmlFor='username'>Username</Form.Label>
+          <Form.Label htmlFor='email'>Email</Form.Label>
           <Form.Control
             type='text'
-            placeholder='Your username'
-            name='username'
+            placeholder='Your email'
+            name='email'
             onChange={handleInputChange}
-            value={userFormData.username || ''}
+            value={userFormData.email}
             required
           />
-          <Form.Control.Feedback type='invalid'>Username is required!</Form.Control.Feedback>
+          <Form.Control.Feedback type='invalid'>Email is required!</Form.Control.Feedback>
         </Form.Group>
 
         <Form.Group className='mb-3'>
@@ -75,13 +68,13 @@ const LoginForm = ({ handleModalClose }: { handleModalClose: () => void }) => {
             placeholder='Your password'
             name='password'
             onChange={handleInputChange}
-            value={userFormData.password || ''}
+            value={userFormData.password}
             required
           />
           <Form.Control.Feedback type='invalid'>Password is required!</Form.Control.Feedback>
         </Form.Group>
         <Button
-          disabled={!(userFormData.username && userFormData.password)}
+          disabled={!(userFormData.email && userFormData.password)}
           type='submit'
           variant='success'>
           Submit
