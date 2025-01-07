@@ -19,3 +19,7 @@ Google-Books is a full-stack MERN application that allows users to search for bo
 - **Backend**: Node.js, Express, MongoDB, Mongoose, Apollo Server, GraphQL
 - **Authentication**: JSON Web Tokens (JWT)
 - **Build Tools**: Vite, TypeScript
+
+## Screenshot
+
+![Screenshot of user Magic's saved books](./screenshot.png)
